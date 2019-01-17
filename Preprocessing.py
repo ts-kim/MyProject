@@ -24,6 +24,7 @@ test_list = os.listdir(test_path)
 data = {}
 data['train'] = train_list
 data['test'] = test_list
+data['class'] = class_dict
 
 with open('dataset/data.json', 'w', encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent="\t")
