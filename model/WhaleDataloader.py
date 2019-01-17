@@ -44,14 +44,15 @@ class WhaleDataset(Dataset):
             image = np.repeat(image,3,axis=2)
             
         if self.split == 'train':
-            label = self.json[self.split][idx][1] 
+            label = self.json[self.split][idx][2] 
+            label = torch.tensor(label).long()
             sample = {'image': image, 'label': label}
         else :
             sample = {'image': image}
 
         if self.transform:
             sample['image'] = self.transform(sample['image'])
-
+        
         return sample
     
 def WhaleDataloader(args,split,transform=None):
