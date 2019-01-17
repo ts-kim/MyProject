@@ -2,6 +2,7 @@ import sys
 import os
 import json
 from skimage import io
+import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
 
@@ -11,7 +12,8 @@ warnings.filterwarnings("ignore")
 
 
 
-class WhalesDataset(Dataset):
+
+class WhaleDataset(Dataset):
     def __init__(self, args, split , transform=None):
         """
         Args:
@@ -20,7 +22,8 @@ class WhalesDataset(Dataset):
             transform (callable, optional): Optional transform to be applied
                 on a sample.
         """
-        self.json = json.loads(open('../dataset/data.json').read())
+        json_path = args.json_path
+        self.json = json.loads(open(json_path).read())
         if split == 'train':
             self.data_dir = args.data_path+'train/'
         else :
@@ -35,25 +38,31 @@ class WhalesDataset(Dataset):
         img_name = os.path.join(self.data_dir,
                                 self.json[self.split][idx][0])
         image = io.imread(img_name)
-        
+        if len(image.shape)==2:
+            image = np.expand_dims(image, axis=2)
+        if image.shape[2] == 1:
+            image = np.repeat(image,3,axis=2)
+            
         if self.split == 'train':
             label = self.json[self.split][idx][1] 
             sample = {'image': image, 'label': label}
         else :
             sample = {'image': image}
-        
-        
+
         if self.transform:
-            sample = self.transform(sample)
+            sample['image'] = self.transform(sample['image'])
 
         return sample
     
 def WhaleDataloader(args,split,transform=None):
     if split == 'train':
-        dataset = Whaledataset(args,'train',transform)
-    else:
-        dataset = Whaledataset(args,'test',transform)
-        
-    dataloader = DataLoader(dataset, batch_size=args.batch_size,
+        dataset = WhaleDataset(args,'train',transform)
+        dataloader = DataLoader(dataset, batch_size=args.batch_size,
                         shuffle=args.shuffle, num_workers=args.num_workers)
+    else:
+        dataset = WhaleDataset(args,'test',transform)
+        dataloader = DataLoader(dataset, batch_size=args.batch_size,
+                                  num_workers=args.num_workers)
+        
+    
     return dataloader
