@@ -110,7 +110,7 @@ def train(args, logger):
                     'model_state_dict': model.state_dict(),
                     'optimizer_state_dict': optimizer.state_dict(),
                     'loss': loss
-                    }, 'epoch-{0}_EM-{1:.2f}_F1-{2:.2f}'.format(epoch,EM,F1)+args.save_path)
+                    }, 'epoch-{0}'.format(epoch)+args.save_path)
         logger.info('    epoch {0}/{1} done | avg.loss : {2:.5f}'.format(epoch+1,num_epoch,epoch_loss/(step+1)))
     logger.info(' ------- model training completed -------')
 
