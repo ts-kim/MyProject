@@ -5,8 +5,10 @@ mkdir dataset/test
 mkdir dataset/train
 mv dataset/train.zip dataset/train/.
 mv dataset/test.zip dataset/test/.
-unzip dataset/train/train.zip
-rm dataset/train/train.zip
-unzip dataset/test/test.zip
-rm datset/test/test.zip
+cd dataset/train/
+unzip train.zip
+rm train.zip
+cd ../test/
+unzip test.zip
+rm test.zip
 
