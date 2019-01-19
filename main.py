@@ -68,6 +68,7 @@ def train(args, logger):
     os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu
 
     dt = datetime.datetime.now()
+    logger.info('')
     logger.info(dt.strftime("%Y.%m.%d - %Hh:%Mm:%Ss"))
     logger.info(str(' '.join(sys.argv)))
     logger.info(' -------------------- setting --------------------')
