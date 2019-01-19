@@ -35,7 +35,7 @@ def evaluate(args, logger, model, transform):
             for i in range(len(batch_X)):
                 out = batch_X[i]
                 out = torch.sort(out)[1]
-                out = out[:5].tolist()
+                out = out[-5:].tolist()
                 test_mini = []
                 for Id, number in class_dict.items():
                     if number in out:
@@ -148,12 +148,13 @@ def train(args, logger):
                 step_loss = 0
         if os.path.isdir('saved_model') == False:
             os.mkdir('saved_model')
-        torch.save({
-                    'epoch': epoch,
-                    'model_state_dict': model.state_dict(),
-                    'optimizer_state_dict': optimizer.state_dict(),
-                    'loss': loss
-                    }, args.save_path+args.version+'_epoch-{0}'.format(epoch)+'.pth')
+        if epoch%args.save_term == 0 or epoch == epoch_range[-1]:
+            torch.save({
+                        'epoch': epoch,
+                        'model_state_dict': model.state_dict(),
+                        'optimizer_state_dict': optimizer.state_dict(),
+                        'loss': loss
+                        }, args.save_path+args.version+'_epoch-{0}'.format(epoch)+'.pth')
         logger.info('    epoch {0}/{1} done | avg.loss : {2:.5f}'.format(epoch+1,num_epoch,epoch_loss/(step+1)))
     logger.info(' ------- model training completed -------')
 
@@ -177,6 +178,7 @@ def parse_args():
     parser.add_argument('--num_workers',nargs='?',type=int,default=4, help='dataloader num_workers')
     parser.add_argument('--evaluation',nargs='?',type=str,default='False', help='resume {input} and evaluate it (no training)')
     parser.add_argument('--version',nargs='?',type=str,default='version_default', help='version name')
+    parser.add_argument('--save_term',nargs='?',type=int,default=10, help='save for every ~ epoch')
     return parser.parse_args()
 
 def log(args):
