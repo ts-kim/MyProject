@@ -11,7 +11,8 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms
+
+from model.transforms import transform_1
 from model.models import model_1
 from model.WhaleDataloader import WhaleDataloader
 
@@ -86,12 +87,7 @@ def train(args, logger):
     logger.info(' -------------------- setting --------------------')
 
     
-    transform=transforms.Compose([
-        transforms.ToPILImage('RGB'),
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
-        transforms.ToTensor()
-    ])
+    transform=transform_1()
     
     train_loader = WhaleDataloader(args, 'train', transform=transform)
     
@@ -173,7 +169,7 @@ def parse_args():
     parser.add_argument('--resume', nargs='?', type=str, default='False', help='If you want to load model parameters, write down the path of model parameters. ex) --resume /home/taesung/bidaf/BiDAF.pth')
     parser.add_argument('--save_path', nargs='?', type=str, default='saved_model/', help='If "False", no save')
     parser.add_argument('--show_loss_term', nargs='?', type=int, default=10, help='')
-    parser.add_argument('--lr',nargs='?',type=float, default=0.0003, help='learning rate')
+    parser.add_argument('--lr',nargs='?',type=float, default=0.0001, help='learning rate')
     parser.add_argument('--num_epoch',nargs='?',type=int, default=12, help='number of epochs')
     parser.add_argument('--batch_size',nargs='?',type=int,default=32, help='batch size')
     parser.add_argument('--log',nargs='?',type=str,default='./log/new_log.log',help='log path')
