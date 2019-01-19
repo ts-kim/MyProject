@@ -18,7 +18,7 @@ from model.WhaleDataloader import WhaleDataloader
 
 import pandas as pd
 
-def evaluate(args, logger, model, transform):
+def evaluate(args, logger, model, transform, epoch=None):
     json_path = args.json_path
     data = json.loads(open(json_path).read())
     class_dict = data['class']
@@ -47,7 +47,7 @@ def evaluate(args, logger, model, transform):
         os.mkdir('submission')
     
     if args.evaluation == 'False':
-        with open('submission/'+args.version+'.csv','w') as f:
+        with open('submission/'+args.version+'-'+str(epoch)+'.csv','w') as f:
             f.write(test_out)
         logger.info(' ------- {} evaluation file made --------'.format(args.version) )
     else:
@@ -155,10 +155,14 @@ def train(args, logger):
                         'optimizer_state_dict': optimizer.state_dict(),
                         'loss': loss
                         }, args.save_path+args.version+'_epoch-{0}'.format(epoch)+'.pth')
+        if epoch%args.save_term == 0 :
+            model.eval()
+            evaluate(args, logger, model, transform, epoch)
+            model.train()
         logger.info('    epoch {0}/{1} done | avg.loss : {2:.5f}'.format(epoch+1,num_epoch,epoch_loss/(step+1)))
     logger.info(' ------- model training completed -------')
 
-    evaluate(args, logger, model, transform)
+    evaluate(args, logger, model, transform, epoch)
     
     
     
@@ -179,6 +183,7 @@ def parse_args():
     parser.add_argument('--evaluation',nargs='?',type=str,default='False', help='resume {input} and evaluate it (no training)')
     parser.add_argument('--version',nargs='?',type=str,default='version_default', help='version name')
     parser.add_argument('--save_term',nargs='?',type=int,default=10, help='save for every ~ epoch')
+    parser.add_argument('--eval_term',nargs='?',type=int,default=10, help='make evaluation csv for every ~ epoch')
     return parser.parse_args()
 
 def log(args):
