@@ -155,7 +155,7 @@ def train(args, logger):
                         'optimizer_state_dict': optimizer.state_dict(),
                         'loss': loss
                         }, args.save_path+args.version+'_epoch-{0}'.format(epoch)+'.pth')
-        if epoch%args.save_term == 0 :
+        if epoch%args.eval_term == 0 :
             model.eval()
             evaluate(args, logger, model, transform, epoch)
             model.train()
