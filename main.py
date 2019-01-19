@@ -68,8 +68,6 @@ def train(args, logger):
     os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu
 
     dt = datetime.datetime.now()
-    logger.info('')
-    logger.info('')
     logger.info(dt.strftime("%Y.%m.%d - %Hh:%Mm:%Ss"))
     logger.info(str(' '.join(sys.argv)))
     logger.info(' -------------------- setting --------------------')
@@ -172,7 +170,7 @@ def parse_args():
     parser.add_argument('--lr',nargs='?',type=float, default=0.0001, help='learning rate')
     parser.add_argument('--num_epoch',nargs='?',type=int, default=12, help='number of epochs')
     parser.add_argument('--batch_size',nargs='?',type=int,default=32, help='batch size')
-    parser.add_argument('--log',nargs='?',type=str,default='./log/new_log.log',help='log path')
+    parser.add_argument('--log',nargs='?',type=str,default='log/',help='log path')
     parser.add_argument('--json_path',nargs='?',type=str,default='dataset/data.json',help='json path')
     parser.add_argument('--shuffle',nargs='?',type=bool, default=True,help='train data shuffle')
     parser.add_argument('--num_workers',nargs='?',type=int,default=4, help='dataloader num_workers')
@@ -181,16 +179,16 @@ def parse_args():
     return parser.parse_args()
 
 def log(args):
-    if os.path.isdir('/'.join(args.log.split('/')[:-1])) == False:
-        os.mkdir('/'.join(args.log.split('/')[:-1]))
-    if os.path.isfile(args.log) == False:
+    if os.path.isdir(args.log) == False:
+        os.mkdir(args.log)
+    if os.path.isfile(args.log+args.version+'.log') == False:
         try:
-            os.utime(args.log, None)
+            os.utime(args.log+args.version+'.log', None)
         except OSError:
-            open(args.log, 'a').close()
+            open(args.log+args.version+'.log', 'a').close()
     logger = logging.getLogger("whale_log")
     logger.setLevel(logging.DEBUG)
-    fileHandler = logging.FileHandler(args.log)
+    fileHandler = logging.FileHandler(args.log+args.version+'.log')
     streamHandler = logging.StreamHandler()
     formatter = logging.Formatter('%(levelname)s | %(message)s')
     fileHandler.setFormatter(formatter)
