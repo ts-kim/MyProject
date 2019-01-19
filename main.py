@@ -98,7 +98,7 @@ def train(args, logger):
     
     
     if args.evaluation != 'False' :
-        checkpoint = torch.load(args.evaluation)
+        checkpoint = torch.load('saved_model/'+args.evaluation)
         model.load_state_dict(checkpoint['model_state_dict'])
         evaluate(args, logger, model, transform)
         return
