@@ -12,7 +12,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import Dataset, DataLoader
 
-from model.transforms import transform_1
+from model.transforms import transform_2
 from model.models import model_1
 from model.WhaleDataloader import WhaleDataloader
 
@@ -86,7 +86,7 @@ def train(args, logger):
     logger.info(' -------------------- setting --------------------')
 
     
-    transform=transform_1()
+    transform=transform_2()
     
     train_loader = WhaleDataloader(args, 'train', transform=transform)
     
