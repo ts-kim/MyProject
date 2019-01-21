@@ -13,7 +13,8 @@ def transform_1():
 def transform_2():
     transform=transforms.Compose([
             transforms.ToPILImage('RGB'),
-            transforms.RandomResizedCrop(size=224, scale=(0.08, 1.0), ratio=(0.75, 1.3333333333333333), interpolation=2),
+            transforms.RandomResizedCrop(size=256, scale=(0.08, 1.0), ratio=(0.75, 1.3333333333333333), interpolation=2),
+            transforms.RandomCrop(224),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.ToTensor()
         ])

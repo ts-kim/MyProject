@@ -13,7 +13,7 @@ from torch.autograd import Variable
 from torch.utils.data import Dataset, DataLoader
 
 from model.transforms import transform_2
-from model.models import model_1
+from model.models import model_2
 from model.WhaleDataloader import WhaleDataloader
 
 import pandas as pd
@@ -91,10 +91,10 @@ def train(args, logger):
     train_loader = WhaleDataloader(args, 'train', transform=transform)
     
     if args.gpu != 'False':
-        model = nn.DataParallel(model_1(),device_ids=device_ids)
+        model = nn.DataParallel(model_2(),device_ids=device_ids)
         model = model.cuda()
     else :
-        model = model_1()
+        model = model_2()
     
     
     if args.evaluation != 'False' :
